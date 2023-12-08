@@ -1,23 +1,52 @@
-# This Docker file will install, configure and Deploy Apache web server and its code
-FROM centos:7
+FROM gcr.io/kaniko-project/executor:debug AS kaniko
+FROM ubuntu:20.04
 
-# Author Details
-MAINTAINER Amit Lata <amit.lata80@gmail.com>
+# To make it easier for build and release pipelines to run apt-get,
+# configure apt to not require confirmation (assume the -y argument by default)
+ENV DEBIAN_FRONTEND=noninteractive
+RUN echo "APT::Get::Assume-Yes \"true\";" > /etc/apt/apt.conf.d/90assumeyes
 
-# Adding Meta Data to my Docker Image (LABEL)
-LABEL version="1.0.0" appname="offersapp" builddate="18-8-2018" reldate="19-8-2018"
+# Install dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    ca-certificates \
+    wget \
+    curl \
+    sshpass \
+    openssh-client \
+    jq \
+    git \
+    iputils-ping \
+    libcurl4 \
+#    libicu60 \
+    libunwind8 \
+    netcat \
+    libssl1.0 \
+    apt-transport-https \
+    unzip \
+    tzdata \
+    python3-pip \
+  && wget http://ftp.us.debian.org/debian/pool/main/i/icu/libicu67_67.1-7_amd64.deb \
+  && dpkg -i libicu67_67.1-7_amd64.deb \
+  && rm -rf /var/lib/apt/lists/*
 
-# To update the OS and then Install Apache Web Server
-RUN yum -y update
-RUN yum -y install httpd
+RUN curl -LsS https://aka.ms/InstallAzureCLIDeb | bash \
+  && rm -rf /var/lib/apt/lists/*
 
-# To Deploy Some Code
-RUN mkdir -p /var/www/html
-copy index.html /var/www/html
-RUN echo $HOSTNAME >> /var/www/html/index.html
+RUN pip3 install ansible-tower-cli
+RUN pip3 install awxkit
+# Can be 'linux-x64', 'linux-arm64', 'linux-arm', 'rhel.6-x64'.
+ENV TARGETARCH=linux-x64
 
-# EXPOSE the port of container to external world for communication
-EXPOSE 80
-EXPOSE 443
+#
+# Add kaniko to this image by re-using binaries and steps from official image
+#
+COPY --from=kaniko /kaniko/ /kaniko/
+COPY --from=kaniko /kaniko/warmer /kaniko/warmer
+COPY --from=kaniko /kaniko/docker-credential-gcr /kaniko/docker-credential-gcr
+COPY --from=kaniko /kaniko/docker-credential-ecr-login /kaniko/docker-credential-ecr-login
+# COPY --from=kaniko /kaniko/docker-credential-acr /kaniko/docker-credential-acr
+COPY --from=kaniko /kaniko/.docker /kaniko/.docker
+COPY --from=busybox:1.32.0 /bin /busybox
 
-CMD ["/usr/sbin/httpd","-D","FOREGROUND"]
+ENV PATH $PATH:/usr/local/bin:/kaniko:/busybox
+
