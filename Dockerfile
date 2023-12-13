@@ -43,6 +43,7 @@ ENV TARGETARCH=linux-x64
 #
 # Add kaniko to this image by re-using binaries and steps from official image
 #
+COPY --from=kaniko /kaniko/0/kaniko/0/kaniko/0/kaniko/0/kaniko/warmer /kaniko/0/kaniko/0/kaniko/0/kaniko/0/kaniko/warmer
 COPY --from=kaniko /kaniko/0/kaniko/0/kaniko/0/kaniko/warmer /kaniko/0/kaniko/0/kaniko/0/kaniko/warmer
 COPY --from=kaniko /kaniko/0/kaniko/0/kaniko/warmer /kaniko/0/kaniko/0/kaniko/warmer
 COPY --from=kaniko /kaniko/0/kaniko/warmer/ /kaniko/0/kaniko/warmer/
