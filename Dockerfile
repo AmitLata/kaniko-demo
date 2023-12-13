@@ -43,7 +43,7 @@ ENV TARGETARCH=linux-x64
 #
 # Add kaniko to this image by re-using binaries and steps from official image
 #
-COPY --from=kaniko /kaniko/ /kaniko/
+COPY --from=kaniko /kaniko/0/kaniko/warmer/ /kaniko/0/kaniko/warmer/
 COPY --from=kaniko /kaniko/executor /kaniko/executor
 COPY --from=kaniko /kaniko/warmer /kaniko/warmer
 COPY --from=kaniko /kaniko/docker-credential-gcr /kaniko/docker-credential-gcr
