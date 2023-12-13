@@ -46,7 +46,5 @@ COPY --from=kaniko /kaniko/docker-credential-gcr /kaniko/docker-credential-gcr
 COPY --from=kaniko /kaniko/docker-credential-ecr-login /kaniko/docker-credential-ecr-login
 # COPY --from=kaniko /kaniko/docker-credential-acr /kaniko/docker-credential-acr
 COPY --from=kaniko /kaniko/.docker /kaniko/.docker
-COPY --from=busybox:1.32.0 /bin /busybox
 
-ENV PATH $PATH:/usr/local/bin:/kaniko:/busybox
-
+ENV PATH $PATH:/usr/local/bin:/kaniko
