@@ -1,6 +1,9 @@
 FROM gcr.io/kaniko-project/executor:v1.7.0-debug AS kaniko
 FROM ubuntu:20.04
 
+# Create /kaniko directory
+RUN set -e && mkdir -p /kaniko
+
 # To make it easier for build and release pipelines to run apt-get,
 # configure apt to not require confirmation (assume the -y argument by default)
 ENV DEBIAN_FRONTEND=noninteractive
@@ -40,11 +43,13 @@ ENV TARGETARCH=linux-x64
 #
 # Add kaniko to this image by re-using binaries and steps from official image
 #
-COPY --from=kaniko /kaniko/ /kaniko/
+COPY --from=kaniko /kaniko/executor /kaniko/executor
 COPY --from=kaniko /kaniko/warmer /kaniko/warmer
 COPY --from=kaniko /kaniko/docker-credential-gcr /kaniko/docker-credential-gcr
 COPY --from=kaniko /kaniko/docker-credential-ecr-login /kaniko/docker-credential-ecr-login
-# COPY --from=kaniko /kaniko/docker-credential-acr /kaniko/docker-credential-acr
-COPY --from=kaniko /kaniko/.docker /kaniko/.docker
+COPY --from=kaniko /kaniko/docker-credential-acr-env /kaniko/docker-credential-acr-env
+COPY --from=kaniko /kaniko/.docker/ /kaniko/.docker/
+COPY --from=kaniko /kaniko/ssl/ /kaniko/ssl/
 
-ENV PATH $PATH:/usr/local/bin:/kaniko
+ENV PATH=$PATH:/usr/local/bin:/kaniko
+ENV DOCKER_CONFIG=/kaniko/.docker/
