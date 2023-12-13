@@ -1,4 +1,4 @@
-FROM gcr.io/kaniko-project/executor:debug AS kaniko
+FROM gcr.io/kaniko-project/executor:v1.7.0-debug AS kaniko
 FROM ubuntu:20.04
 
 # To make it easier for build and release pipelines to run apt-get,
