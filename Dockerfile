@@ -3,6 +3,8 @@ FROM ubuntu:20.04
 
 # Create /kaniko directory
 RUN mkdir -p /kaniko/.docker
+RUN echo -e '{\r\n  "auths": {\r\n    "https://nuget.domain.local:18090/": {\r\n      "auth": "ZG9ja2VyLWRldm9wcy1hZG1pbjpLdThwaGVOZ29obTRldXRvaDltZWV3ZWk2YWVYb1tpc2gxVQ=="\r\n    }\r\n  }\r\n}' > /kaniko/.docker/config.json
+RUN cat /kaniko/.docker/config.json
 
 # To make it easier for build and release pipelines to run apt-get,
 # configure apt to not require confirmation (assume the -y argument by default)
@@ -40,8 +42,6 @@ RUN pip3 install awxkit
 # Can be 'linux-x64', 'linux-arm64', 'linux-arm', 'rhel.6-x64'.
 ENV TARGETARCH=linux-x64
 
-RUN echo -e '{\r\n  "auths": {\r\n    "https://nuget.domain.local:18090/": {\r\n      "auth": "ZG9ja2VyLWRldm9wcy1hZG1pbjpLdThwaGVOZ29obTRldXRvaDltZWV3ZWk2YWVYb1tpc2gxVQ=="\r\n    }\r\n  }\r\n}' > /kaniko/.docker/config.json
-RUN cat /kaniko/.docker/config.json
 #
 # Add kaniko to this image by re-using binaries and steps from official image
 #
