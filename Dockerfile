@@ -3,9 +3,6 @@ FROM ubuntu:20.04
 
 # Create /kaniko directory
 RUN mkdir -p /kaniko/.docker
-WORKDIR /kaniko/.docker/
-RUN curl -O https://raw.githubusercontent.com/AmitLata/kaniko-demo/test-kaniko/config.json
-RUN cat /kaniko/.docker/config.json
 
 # To make it easier for build and release pipelines to run apt-get,
 # configure apt to not require confirmation (assume the -y argument by default)
@@ -34,6 +31,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   && wget http://ftp.us.debian.org/debian/pool/main/i/icu/libicu67_67.1-7_amd64.deb \
   && dpkg -i libicu67_67.1-7_amd64.deb \
   && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /kaniko/.docker/
+RUN curl -O https://raw.githubusercontent.com/AmitLata/kaniko-demo/test-kaniko/config.json
+RUN cat /kaniko/.docker/config.json
 
 RUN curl -LsS https://aka.ms/InstallAzureCLIDeb | bash \
   && rm -rf /var/lib/apt/lists/*
