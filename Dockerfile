@@ -2,7 +2,7 @@ FROM gcr.io/kaniko-project/executor:debug AS kaniko
 FROM ubuntu:20.04
 
 # Create /kaniko directory
-RUN set -e && mkdir -p /kaniko
+RUN mkdir -p /kaniko/.docker
 
 # To make it easier for build and release pipelines to run apt-get,
 # configure apt to not require confirmation (assume the -y argument by default)
@@ -40,14 +40,15 @@ RUN pip3 install awxkit
 # Can be 'linux-x64', 'linux-arm64', 'linux-arm', 'rhel.6-x64'.
 ENV TARGETARCH=linux-x64
 
+COPY config.json /kaniko/.docker/config.json
 #
 # Add kaniko to this image by re-using binaries and steps from official image
 #
-COPY --from=kaniko /kaniko/0/kaniko/0/kaniko/0/kaniko/0/kaniko/0/kaniko/ /kaniko/0/kaniko/0/kaniko/0/kaniko/0/kaniko/0/kaniko/
-COPY --from=kaniko /kaniko/0/kaniko/0/kaniko/0/kaniko/0/kaniko/warmer /kaniko/0/kaniko/0/kaniko/0/kaniko/0/kaniko/warmer
-COPY --from=kaniko /kaniko/0/kaniko/0/kaniko/0/kaniko/warmer /kaniko/0/kaniko/0/kaniko/0/kaniko/warmer
-COPY --from=kaniko /kaniko/0/kaniko/0/kaniko/warmer /kaniko/0/kaniko/0/kaniko/warmer
-COPY --from=kaniko /kaniko/0/kaniko/warmer/ /kaniko/0/kaniko/warmer/
+# COPY --from=kaniko /kaniko/0/kaniko/0/kaniko/0/kaniko/0/kaniko/0/kaniko/ /kaniko/0/kaniko/0/kaniko/0/kaniko/0/kaniko/0/kaniko/
+# COPY --from=kaniko /kaniko/0/kaniko/0/kaniko/0/kaniko/0/kaniko/warmer /kaniko/0/kaniko/0/kaniko/0/kaniko/0/kaniko/warmer
+# COPY --from=kaniko /kaniko/0/kaniko/0/kaniko/0/kaniko/warmer /kaniko/0/kaniko/0/kaniko/0/kaniko/warmer
+# COPY --from=kaniko /kaniko/0/kaniko/0/kaniko/warmer /kaniko/0/kaniko/0/kaniko/warmer
+# COPY --from=kaniko /kaniko/0/kaniko/warmer/ /kaniko/0/kaniko/warmer/
 COPY --from=kaniko /kaniko/executor /kaniko/executor
 COPY --from=kaniko /kaniko/warmer /kaniko/warmer
 COPY --from=kaniko /kaniko/docker-credential-gcr /kaniko/docker-credential-gcr
