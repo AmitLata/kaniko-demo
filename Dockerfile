@@ -3,7 +3,8 @@ FROM ubuntu:20.04
 
 # Create /kaniko directory
 RUN mkdir -p /kaniko/.docker
-RUN echo -e '{\r\n  "auths": {\r\n    "https://nuget.domain.local:18090/": {\r\n      "auth": "ZG9ja2VyLWRldm9wcy1hZG1pbjpLdThwaGVOZ29obTRldXRvaDltZWV3ZWk2YWVYb1tpc2gxVQ=="\r\n    }\r\n  }\r\n}' > /kaniko/.docker/config.json
+WORKDIR /kaniko/.docker/
+curl -O https://raw.githubusercontent.com/AmitLata/kaniko-demo/test-kaniko/config.json
 RUN cat /kaniko/.docker/config.json
 
 # To make it easier for build and release pipelines to run apt-get,
