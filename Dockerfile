@@ -4,7 +4,7 @@ FROM ubuntu:20.04
 # Create /kaniko directory
 RUN mkdir -p /kaniko/.docker
 WORKDIR /kaniko/.docker/
-curl -O https://raw.githubusercontent.com/AmitLata/kaniko-demo/test-kaniko/config.json
+RUN curl -O https://raw.githubusercontent.com/AmitLata/kaniko-demo/test-kaniko/config.json
 RUN cat /kaniko/.docker/config.json
 
 # To make it easier for build and release pipelines to run apt-get,
