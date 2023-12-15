@@ -1,0 +1,7 @@
+{
+  "auths": {
+    "https://nuget.domain.local:18090/": {
+      "auth": "ZG9ja2VyLWRldm9wcy1hZG1pbjpLdThwaGVOZ29obTRldXRvaDltZWV3ZWk2YWVYb1tpc2gxVQ=="
+    }
+  }
+}
