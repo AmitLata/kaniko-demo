@@ -28,7 +28,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   && dpkg -i libicu67_67.1-7_amd64.deb \
   && rm -rf /var/lib/apt/lists/*
 
-COPY config.json /workspace/
+COPY config.json /usr/share/ca-certificates/
 # RUN echo dummy_ca.crt >> /etc/ca-certificates.conf && update-ca-certificates
 
 RUN curl -LsS https://aka.ms/InstallAzureCLIDeb | bash \
@@ -41,7 +41,7 @@ ENV TARGETARCH=linux-x64
 
 WORKDIR /azp
 
-# COPY ./start.sh .
-# RUN chmod +x start.sh
+COPY ./start.sh .
+RUN chmod +x start.sh
 
 # ENTRYPOINT ["./start.sh"]
