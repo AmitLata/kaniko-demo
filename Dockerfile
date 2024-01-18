@@ -28,8 +28,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   && dpkg -i libicu67_67.1-7_amd64.deb \
   && rm -rf /var/lib/apt/lists/*
 
-COPY dummy_ca.crt /workspace/
-RUN echo dummy_ca.crt >> /etc/ca-certificates.conf && update-ca-certificates
+COPY config.json /workspace/
+# RUN echo dummy_ca.crt >> /etc/ca-certificates.conf && update-ca-certificates
 
 RUN curl -LsS https://aka.ms/InstallAzureCLIDeb | bash \
   && rm -rf /var/lib/apt/lists/*
